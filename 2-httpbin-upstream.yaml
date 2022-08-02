@@ -1,0 +1,12 @@
+apiVersion: gloo.solo.io/v1
+kind: Upstream
+metadata:
+  name: edge-service-80
+  namespace: httpbin
+spec:
+  kube:
+    selector:
+      app: httpbin
+    serviceName: httpbin
+    serviceNamespace: httpbin
+    servicePort: 8000

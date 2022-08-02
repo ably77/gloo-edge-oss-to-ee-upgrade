@@ -1,0 +1,17 @@
+apiVersion: gateway.solo.io/v1
+kind: RouteTable
+metadata:
+  name: 'httpbin-delegate1'
+  namespace: 'httpbin'
+  labels:
+    domain: all
+spec:
+  routes:
+    - matchers:
+        # the path matchers in this RouteTable must begin with the prefix `/a/`
+       - prefix: '/'
+      routeAction:
+        single:
+          upstream:
+            name: 'edge-service-80'
+            namespace: httpbin

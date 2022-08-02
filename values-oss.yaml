@@ -1,0 +1,53 @@
+discovery:
+  enabled: false
+gatewayProxies:
+  gatewayProxy:
+    kind:
+      deployment:
+        replicas: 2
+    gatewaySettings:
+      options:
+        accessLoggingService:
+          accessLog:
+          - fileSink:
+              path: /dev/stdout
+              stringFormat: ""
+  gatewayProxyInternal:
+    disabled: true
+    kind:
+      deployment:
+        replicas: 2
+    service:
+      httpsFirst: true
+      extraAnnotations:
+        service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    gatewaySettings:
+      customHttpGateway:
+        virtualServiceSelector:
+          gateway-type: private
+      customHttpsGateway:
+        virtualServiceSelector:
+          gateway-type: private
+      options:
+        accessLoggingService:
+          accessLog:
+            - fileSink:
+                path: /dev/stdout
+                stringFormat: ""
+gloo:
+  deployment:
+    replicas: 2
+gateway:
+  deployment:
+    replicas: 2
+global:
+  glooStats:
+    enabled: true
+    enableStatsRoute: true
+    setDatadogAnnotations: true
+settings:
+  invalidConfigPolicy:
+    replaceInvalidRoutes: true
+    invalidRouteResponseBody: "Gloo Gateway has invalid configuration. Administrators should run `glooctl check` to find and fix config errors."
+    invalidRouteResponseCode: 404
+  watchNamespaces: [] # All Namespaces

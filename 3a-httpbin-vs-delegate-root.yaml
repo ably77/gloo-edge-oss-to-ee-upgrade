@@ -1,0 +1,18 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: 'httpbin'
+  namespace: 'gloo-system'
+spec:
+  virtualHost:
+    domains:
+    - 'httpbin-local.glootest.com'
+    routes:
+    - matchers:
+       - prefix: '/' # delegate ownership of routes for `/`
+      delegateAction:
+        selector:
+          labels:
+            domain: all
+          namespaces:
+          - httpbin
