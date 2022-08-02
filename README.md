@@ -1,18 +1,20 @@
-# install glooctl and set version to 1.11.x
+# OSS to EE Upgrade Example
+
+## Install glooctl and set version to 1.11.x
 ```
 curl -sL https://run.solo.io/gloo/install | sh
 export PATH=$HOME/.gloo/bin:$PATH
 glooctl upgrade --release=v1.11.7
 ```
 
-# Install Gloo OSS 1.11.7 with Helm
+## Install Gloo OSS 1.11.7 with Helm
 ```
 helm repo add gloo https://storage.googleapis.com/solo-public-helm
 helm repo update
 helm upgrade --install gloo gloo/gloo --namespace gloo-system --create-namespace --version 1.11.7 --values=values-oss.yaml
 ```
 
-# watch gloo-system
+## Watch gloo-system
 ```
 % kubectl get pods -n gloo-system   
 NAME                             READY   STATUS    RESTARTS   AGE
@@ -25,7 +27,7 @@ gateway-59577d686-2hhnq          1/1     Running   0          82s
 gateway-59577d686-jg8dx          1/1     Running   0          82s
 ```
 
-# deploy httpbin backend
+## Deploy httpbin backend
 ```
 kubectl create namespace httpbin
 kubectl apply -f 1-httpbin.yaml
@@ -34,7 +36,7 @@ kubectl apply -f 3a-httpbin-vs-delegate-root.yaml
 kubectl apply -f 3b-httpbin-vs-delegate1.yaml
 ```
 
-# check
+## Check
 ```
 % glooctl get vs 
 +-----------------+--------------+----------------------------+------+----------+-----------------+--------+
@@ -62,31 +64,32 @@ or with curl
 }
 ```
 
-# uninstall gloo edge OSS
+## Uninstall gloo edge OSS
 ```
 helm uninstall gloo --namespace gloo-system
 ```
 
-# check
+## Check
 ```
 % k get pods -n gloo-system
 No resources found in gloo-system namespace.
 ```
 
-# Apply Latest Gloo Edge EE CRDs
+## Install Gloo Edge Enterprise 1.11.6 (Uses OSS v1.11.7)
+Apply Latest Gloo Edge EE CRDs:
 ```
 helm pull glooe/gloo-ee --version 1.11.6 --untar
 kubectl apply -f gloo-ee/charts/gloo/crds
 kubectl apply -f gloo-ee/charts/gloo-fed/crds
 ```
 
-# install Gloo Edge Enterprise 1.11.6 (Uses OSS v1.11.7)
+Install Gloo Edge EE:
 ```
 helm repo add glooe https://storage.googleapis.com/gloo-ee-helm
 helm upgrade --install gloo glooe/gloo-ee --namespace gloo-system --create-namespace --version 1.11.6 --set license_key=$LICENSE_KEY --values=values-ee.yaml
 ```
 
-# watch gloo-system
+## Watch gloo-system
 You should see additional Gloo Edge Enterprise pods in the `gloo-system` namespace
 ```
 % k get pods -n gloo-system                
@@ -108,7 +111,7 @@ glooe-prometheus-server-84789c4f55-wsrvc               2/2     Running   0      
 rate-limit-5df9b7c8d8-57jvj                            1/1     Running   2 (8m54s ago)   10m
 ```
 
-# check
+## Check
 The VirtualService should still be there
 ```
 % glooctl get vs 
