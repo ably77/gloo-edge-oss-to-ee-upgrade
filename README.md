@@ -27,7 +27,7 @@ gateway-59577d686-2hhnq          1/1     Running   0          82s
 gateway-59577d686-jg8dx          1/1     Running   0          82s
 ```
 
-## Deploy httpbin backend
+## Deploy httpbin app and Upstream/VirtualService
 ```
 kubectl create namespace httpbin
 kubectl apply -f 1-httpbin.yaml
